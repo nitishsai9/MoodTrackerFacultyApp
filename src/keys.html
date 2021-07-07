@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <title>Mood Tracker</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+        <script src="navigator.js"></script>
+         <script src="dialog.js"></script>
+         <script src="index.js"></script>
+        <!-- CSS Files -->
+        <link rel="stylesheet" type="text/css" href="styles.css">
+  
+
+    </head>
+
+    <body>
+        <section>
+            <div class="container">
+                <div class="table-responsive-lg">
+
+
+
+                    <table class="table table-striped pricing-table">
+                        <thead>
+                        <tr>
+                            <th class="text-center border-0 pb-3">
+                                <button class="btn  btn-outline-info btn-rounded" onclick="homePage()">Dash Board</button>
+                            </th>
+                            <th class="text-center border-0 pb-3">
+                                <button class="btn  btn-outline-dark btn-rounded" onclick="generateToken()">Generate New Key</button>
+                            </th>
+
+                          
+                        </tr>
+                        <tr style="text-align: center;">
+                            <th class="text-center border-0 pb-3">  </th>
+                          <th class="text-center border-0 pb-3"><span id="keyarea" class="rainbow-text" style="font-size: 1.2em;">HI </span> <br> Click Generate Key To Start New Class </th>
+                          <th class="text-center border-0 pb-3">  </th>
+                        </tr>
+                        
+                            <tr>
+                                <th class="text-center border-0 pb-5"> Key Name</th>
+                                <th class="text-center border-0 pb-5"> ClassName </th>
+                                <th class="text-center border-0 pb-5"> Date </th>
+                        
+                            </tr>
+                            
+      
+                       
+                        
+                        </thead>
+
+                        <tbody id="table-value">
+                            <tr>
+                                <td scope="row" class="border-0 text-center">39c0474e-98aa-415d-8e48-213630fe5176</td>
+                                <td scope="row" class="border-0 text-center"></td>
+                 
+                                <td scope="row" class="border-0 text-center">Centralized teams</td>
+                 
+                            </tr>
+                            <tr>
+                                <td scope="row" class="border-0 text-center">39c0474e-98aa-415d-8e48-213630fe5176</td>
+                                <td scope="row" class="border-0 text-center">Centralized teams</td>
+                 
+                                <td scope="row" class="border-0 text-center">Centralized teams</td>
+                 
+                            </tr>
+                       
+                        </tbody>
+
+
+
+
+                    </table>
+                </div>
+            </div>
+        </section>
+        <script>
+            const keyd= document.getElementById('keyarea');
+            var axios = require('axios');     
+const { v4: uuidv4 } = require('uuid');
+
+ const d1 = document.getElementById('table-value');
+
+fillData();
+function fillData(){
+  axios.post('http://localhost:4000/api/get_key', {
+    facultyNumber: localStorage.getItem('facultyNumber')
+  })
+  .then(function (response) {
+    console.log(response);
+    var Arr = response.data.success;
+
+    var table = "" ;
+ 
+ for(var i in Arr){
+     table += "<tr>";
+     table += `<td scope="row" class="border-0 text-center">` 
+             + Arr[i].keyName +"</td>" 
+             + `<td scope="row" class="border-0 text-center">` + Arr[i].className +"</td>" 
+             + `<td scope="row" class="border-0 text-center">` + Arr[i].Date +"</td>" ;
+     table += "</tr>";
+ }
+
+ d1.innerHTML=table;
+
+
+
+
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+}
+
+var ClassName="";
+  function generateToken(){
+    dialog.prompt("Enter Class Name", "ClassName","")
+.then(value=>{
+    ClassName=value;
+  if(ClassName===""){
+      alert("ERROR","Please Enter ClassName")
+  }else{
+
+    
+   const newId= uuidv4();
+
+Date.prototype.getTimestamp = function() {
+ var year = this.getFullYear(),
+     month = this.getMonth(),
+     day = this.getDate(),
+     hours = this.getHours(),
+     minutes = this.getMinutes(),
+     seconds = this.getSeconds();
+
+ month = month < 10 ? "0" + month : month;
+ day = day < 10 ? "0" + day : day;
+ hours = hours < 10 ? "0" + hours : hours;
+ minutes = minutes < 10 ? "0" + minutes : minutes;
+ seconds = seconds < 10 ? "0" + seconds : seconds; 
+
+ return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+}
+
+var d = new Date();
+
+var timeDay= d.getTimestamp();
+
+keyd.innerText=newId;
+
+const objNew={
+    "facultyNumber":localStorage.getItem('facultyNumber'),
+    "keyName":newId,
+    "className":ClassName,
+    "Date": timeDay
+
+}
+
+axios.post('http://localhost:4000/api/create_key', objNew)
+.then(function (response) {
+    fillData();
+ dialog.alert('Message','Sucessfully posted')
+
+})
+.catch(function (error) {
+ console.log(error);
+});
+
+
+
+
+
+
+
+  }
+
+
+})
+.catch(()=>{
+ //cancelled
+})
+
+
+
+
+   
+  }
+
+  function homePage(){
+      nextPage(2);
+  }
+        </script>
+    </body>
+
+</html>

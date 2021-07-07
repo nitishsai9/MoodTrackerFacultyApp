@@ -1,0 +1,173 @@
+<html>
+<head>
+
+    <title>Mood Tracker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+    <script src="navigator.js"></script>
+    <script src="index.js"></script>
+    <!-- CSS Files -->
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+
+</head>
+
+
+<body>
+<main class="auth">
+    <div class="container-fluid">
+        <div class="row vh-100">
+            <div class="col-md-6 text-center d-flex flex-column justify-content-center  text-white">
+                <h1 id="welcome-text" class="rainbow-text">Hello</h1>
+                <h4 id="okaychey"></h4>
+                <canvas id="chart"></canvas>
+            </div>
+            <div class="col-md-6 text-center d-flex flex-column justify-content-center">
+                <div class="auth-form-section">
+                    <h2>Monitor student</h2>
+                    <form action="index.html" class="auth-form">
+                        <div class="form-group">
+                            <label for="username" class="sr-only">Username</label>
+                            <input type="text" name="username" id="username" class="form-control" placeholder="Username">
+                        </div>
+                        <div class="form-group">
+                            <label for="className" class="sr-only">Class Key</label>
+                            <input type="text" name="className" id="className" class="form-control" placeholder="class Key">
+                        </div>
+                        <a href="javascript:void(0)" class="btn btn-dark btn-block mb-3" onclick="postData()">
+
+
+                            Search Student
+                                                    </a>
+
+                                                    <a href="javascript:void(0)" class="btn btn-danger btn-block mb-3" onclick="nextPageNavigator()">
+
+
+                                                        Generate New Key
+                                                                                </a>
+                                                    
+                                                                                <a href="javascript:void(0)" class="btn btn-info btn-block mb-3" onclick="notificationPage()">
+
+
+                                                                                    Notifications
+                                                                                                            </a>
+
+                    </form>
+
+                    <button class="btn  btn-outline-dark btn-rounded" onclick="logoutPage()">Log Out</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+    <script>
+
+        function notificationPage(){
+            nextPage(4);
+        }
+
+
+        document.getElementById('welcome-text').innerText="Hi "+localStorage.getItem("fullName");
+
+
+
+        var data_of_student={
+            'Netural':0,
+    'Happy':0,
+    'Angry':0,
+    'Surprised':0,
+    'Sad':0,
+    'Disgusted':0,
+    'Worried':0,
+    'NotOnScreen':0
+        };
+
+
+function nextPageNavigator(){
+    nextPage(3);
+}
+
+function postData(){
+            var axios = require('axios'); 
+            var userName = document.getElementById('username').value;
+            var className = document.getElementById('className').value;
+            var okaychey = document.getElementById('okaychey');
+            axios.post('http://localhost:4000/api/get_Student', {
+                rollNumber: userName,
+                className: className
+  })  .then(function (response) { 
+      okaychey.innerText= userName+" "+className;
+
+    
+     var newArr=response.data.success;
+    for(var i=0;i<newArr.length;i++){
+        var md = newArr[i].mood;
+
+        data_of_student[md] = data_of_student[md] ? data_of_student[md] + 1 : 1;
+
+    }
+
+
+
+    var Chart = require('chart.js');
+        var ctx = document.getElementById('chart').getContext('2d');
+        var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'doughnut',
+
+        // The data for our dataset
+        data: {
+            labels: [
+    'Netural',
+    'Happy',
+    'Angry',
+    'Surprised',
+    'Sad',
+    'Disgusted',
+    'Worried',
+    'NotOnScreen'
+  ],
+  datasets: [{
+    label: 'Student Data',
+    data: [data_of_student.Netural,data_of_student.Happy,data_of_student.Angry,data_of_student.Surprised,data_of_student.Surprised,data_of_student.Sad,data_of_student.Disgusted,data_of_student.Worried,data_of_student.NotOnScreen],
+    backgroundColor: [
+      'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      'rgb(255, 205, 86)',
+      'rgb(122, 92, 97)',
+      'rgb(104, 116, 232)',
+      'rgb(57, 39, 89)',
+      'rgb(150, 52, 132)',
+      'rgb(48, 102, 190)'
+    ],
+    hoverOffset: 4
+  }]
+
+},
+// Configuration options go here
+        options: {}
+});
+
+   })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+
+}
+
+
+
+
+
+      
+    </script>
+
+
+</body>
+
+</html>

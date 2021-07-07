@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <title>Mood Tracker</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+        <script src="navigator.js"></script>
+        
+        <!-- CSS Files -->
+        <link rel="stylesheet" type="text/css" href="styles.css">
+  
+
+    </head>
+
+    <body>
+
+        <section>
+            <div class="auth auth-card-container">
+                                              
+<div class="auth-card">
+    <ul class="list">
+        <li class="list-notifications-item text-center" style="justify-content: center;">
+            <button class="btn  btn-outline-info btn-rounded" onclick="homePage()">Dash Board</button>
+        </li>
+
+    </ul>
+       
+                <ul class="list" id="noti-data">
+                 
+               
+                    
+                </ul>
+            </div>
+        </div>
+
+        </section>
+  <script>
+      function homePage(){
+          nextPage(2);
+      }
+
+  var axios = require('axios'); 
+      var notid = document.getElementById('noti-data');
+
+
+      axios.post('http://localhost:4000/api/get_notification', {
+    facultyNumber: localStorage.getItem('facultyNumber')
+  })
+  .then(function (response) {
+    console.log(response);
+    var Arr = response.data.success;
+
+    var table = "" ;
+ 
+ for(var i in Arr){
+     table += `<li class="list-notifications-item">`;
+    table += `<img src="notification.png" alt="profile" class="list-notifications-img">`;
+    table +=`  <div class="list-notifications-content">`;
+     table+= `<h6 class="notification-title">`+ Arr[i].fullName +" is not infront of the camera"+`</h6>`;
+     table+=`<p class="notification-subtitle">`+Arr[i].Date+`</p>`
+     table+=`</div>`;
+     table += "</li>";
+ }
+
+notid.innerHTML=table;
+
+
+
+
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+
+     
+
+
+      
+
+
+  </script>
+
+    </body>
+
+</html>

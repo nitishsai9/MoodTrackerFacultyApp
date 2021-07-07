@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <title>Mood Tracker</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+        <script src="navigator.js"></script>
+        
+        <!-- CSS Files -->
+        <link rel="stylesheet" type="text/css" href="styles.css">
+  
+
+    </head>
+
+    <body class="auth-card-page">
+        <main class="auth auth-card-container">
+            <div class="auth-card">
+                <div class="row">
+                    <div class="col-md-6 d-flex align-items-center justify-content-center auth-bg-section">
+                        <img src="https://media.tenor.com/images/c2d43680779b58ab5019c2ecddb4f0b8/tenor.gif" class="img-fluid" alt="login">
+                    </div>
+                    <div class="col-md-6 d-flex py-5 flex-column justify-content-center bg-white">
+                        <div class="auth-form-section">
+                            <h2>Sign in</h2>
+                            <form action="index.html" class="auth-form">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" name="username" id="username" class="form-control" placeholder="RollNumber">
+                                </div>
+                                <div class="form-group">
+                                    <label for="userPassword">Password</label>
+                                    <input type="password" name="userPassword" id="userPassword" class="form-control"
+                                        placeholder="********">
+                                </div>
+
+                                
+                                <a href="javascript:void(0)" class="btn btn-dark btn-block mb-3" onclick="postData()">
+
+
+                                    Sign In
+                                                            </a>
+                              
+                                <p class="text-left mb-0">Don't have an account yet? <a href="signup.html">Sign Up!</a> </p>
+
+                            </form>
+                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            
+            function postData(){
+                var axios = require('axios'); 
+            
+                localStorage.clear();
+            
+
+            var userName = document.getElementById('username').value;
+            var password =document.getElementById('userPassword').value;
+            console.log(userName,password);
+
+            axios.post('http://localhost:4000/api/login_faculty', {
+                rollNumber: userName,
+                password: password
+  })
+  .then(function (response) {
+    if(response.data.code===200){
+        var datad= response.data.success;
+        var fullName = datad[0].firstName+" "+datad[0].lastName;
+        console.log(fullName);
+        localStorage.setItem('facultyNumber', datad[0].facultyNumber);
+        localStorage.setItem('fullName',fullName);
+
+        nextPage(2);
+
+    }
+    else{
+        alert("user Not found");
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+
+
+            }
+
+        </script>
+    </body>
+
+</html>

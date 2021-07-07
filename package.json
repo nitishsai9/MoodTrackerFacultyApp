@@ -1,0 +1,35 @@
+{
+  "name": "moodytracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "install-app-deps",
+    "pack": "electron-builder --dir",
+    "distw": "electron-builder --ia32",
+    "dist": "electron-builder"
+  },
+  "keywords": [],
+  "author": "Nitish",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^11.1.0",
+    "electron-builder": "^22.9.1"
+  },
+  "dependencies": {
+    "@dyz1990/dialog.js": "^1.0.2",
+    "axios": "^0.21.0",
+    "chart.js": "^3.3.2",
+    "electron-osx-prompt": "^1.4.1",
+    "electron-settings": "^4.0.2",
+    "uuid": "^8.3.2"
+  },
+  "build": {
+    "appId": "nitish.moodtracker.dev",
+    "win": {
+      "target": "portable",
+      "icon": "src/assets/ms-icon-310x310.png"
+    }
+  }
+}

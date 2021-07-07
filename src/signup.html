@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <title>Mood Tracker</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+        <script src="navigator.js"></script>
+        
+        <!-- CSS Files -->
+        <link rel="stylesheet" type="text/css" href="styles.css">
+  
+        
+
+
+    </head>
+
+    <body class="auth-card-page">
+        <main class="auth auth-card-container">
+            <div class="auth-card">
+                <div class="row">
+                    <div class="col-md-6 d-flex align-items-center justify-content-center auth-bg-section">
+                        <img src="https://media.tenor.com/images/b9e590ea7a4c1e4bbdd3d579eaf8f4d4/tenor.gif" class="img-fluid" alt="login">
+                    </div>
+                    <div class="col-md-6 d-flex py-2 flex-column justify-content-center bg-white">
+                        <div class="auth-form-section">
+                            <form action="index.html" class="auth-form">
+                                <div class="form-group">
+                                    <label for="username">Login Id</label>
+                                    <input type="text" name="username" required id="username" class="form-control" placeholder="FacultyId">
+                                </div>
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" name="firstName" id="firstName" required class="form-control" placeholder="firstName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" name="lastName" id="lastName" required class="form-control" placeholder="lastName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Secret Key</label>
+                                    <input type="text" name="SecretKey" id="SecretKey" required class="form-control" placeholder="SecretKey">
+                                </div>
+                                <div class="form-group">
+                                    <label for="userPassword">Password</label>
+                                    <input type="password" name="userPassword" required id="userPassword" class="form-control"
+                                        placeholder="********">
+                                </div>
+
+                                <a href="javascript:void(0)" class="btn btn-dark btn-block mb-3" onclick="postSignUP()">
+
+
+            Sign Up
+                                    </a>
+                                 
+                        
+            
+                            </form>
+                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+    </body>
+
+
+    <script>
+
+    function postSignUP(){
+                  
+        var axios = require('axios'); 
+        var rollNumber = document.getElementById('username').value;
+        var firstName =document.getElementById('firstName').value;
+        var lastName =document.getElementById('lastName').value;
+        var SecretKey =document.getElementById('SecretKey').value;
+        var password = document.getElementById('userPassword').value;
+
+console.log(rollNumber);
+        if(rollNumber===""){
+            alert('Pleaser Fill Required Forms');
+        }
+
+        if(SecretKey==="12345678900987654321"){
+            axios.post("http://localhost:4000/api/register_faculty",
+        {
+                rollNumber: rollNumber,
+                firstName: firstName,
+                password: password, 
+                lastName:lastName
+  }
+        ).then(function (response) {
+      console.log(response);
+    if(response.data.code===200){
+        alert('Signup successful');
+        
+        nextPage(0);
+
+    }
+    else if(response.data.code===204){
+        alert(response.data.failed);
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+
+        }else{
+            alert('have a wrong secretkey sorry');
+        }
+
+          
+     
+
+    }
+    </script>
+
+</html>
